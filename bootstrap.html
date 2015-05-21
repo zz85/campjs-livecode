@@ -1,0 +1,25 @@
+<html>
+<body>
+	<script>
+
+	var canvas = document.createElement('canvas');
+	var ctx = canvas.getContext('2d');
+
+	function resize() {
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+	}
+
+	document.body.appendChild(canvas);
+
+	resize();
+
+	window.addEventListener('resize', resize);
+
+	window.addEventListener('mousemove', function(e) {
+		console.log(e.pageX, e.pageY);
+	});
+
+	</script>
+</body>
+</html>
