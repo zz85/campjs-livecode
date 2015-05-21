@@ -67,10 +67,13 @@
 		var codemirror;
 		var delay, status;
 
+		var preview;
+
 		window.addEventListener('load', init);
 
 		function init() {
 			status_pane = document.getElementById('status');
+			preview = document.getElementById('preview');
 
 			codemirror = CodeMirror( document.querySelector('editor'), {
 				value: '',
@@ -106,12 +109,33 @@
 			});
 
 		}
-		function update() {
 
+		function ajax(url, callback) {
+			var request = new XMLHttpRequest();
+			request.open('GET', url, true);
+
+			request.onload = function() {
+				var response = request.response;
+				if (callback) callback(response)
+				// console.log('response', response)
+			}
+
+			request.send();
 		}
 
-		function reload() {
+		function update(script) {
+			preview.contentWindow.eval(script)
+		}
 
+		function reload(html) {
+			preview.contentDocument.body.innerHTML = '';
+			preview.contentDocument.write(code);
+		}
+
+		function test() {
+			ajax('bootstrap.html', function(code) {
+				reload(html);
+			})
 		}
 
 	</script>

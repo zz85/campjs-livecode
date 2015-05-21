@@ -10,15 +10,31 @@
 		canvas.height = window.innerHeight;
 	}
 
-	document.body.appendChild(canvas);
-
-	resize();
-
-	window.addEventListener('resize', resize);
-
-	window.addEventListener('mousemove', function(e) {
+	function mousemove(e) {
 		console.log(e.pageX, e.pageY);
-	});
+	}
+
+	function init() {
+		window.addEventListener('resize', resize);
+		window.addEventListener('mousemove', mousemove);
+
+		document.body.appendChild(canvas);
+
+		resize();
+	}
+
+	function destory() {
+		document.body.appendChild(canvas);
+
+		window.removeEventListener('resize', resize);
+		window.removeEventListener('mousemove', mousemove);
+	}
+
+	function draw() {
+
+	}
+
+	init();
 
 	</script>
 </body>
