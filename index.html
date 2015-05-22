@@ -4,8 +4,8 @@
 	<meta charset="utf-8">
 </head>
 <body>
-
 	<style>
+
 	body {
 
 		width: 100%;
@@ -134,10 +134,22 @@ background: orange;
 			});
 
 			// populate dropdown
+			templates.innerHTML  = '<option value="">--Load--</option>\
+			<option>draw</option>\
+			<option>particle3c</option>\
+			<option>particle3b</option>\
+			<option>particle3a</option>\
+			<option>particle2c</option>\
+			<option>particle2b</option>\
+			<option>particle2</option>\
+			<option>particle1d</option>\
+			<option>particle1b</option>\
+			<option>particle1</option>'
 
-			templates.innerHTML  = '<option value="">--Load--</option><option>draw</option>'
-
-			insert_templates.innerHTML  = '<option value="">--Insert--</option><option>circle</option>'
+			insert_templates.innerHTML  = '<option value="">--Insert--</option>\
+			<option>circle</option>\
+			<option>mousemove</option>\
+			<option>text</option>'
 
 		}
 
@@ -214,6 +226,7 @@ background: orange;
 			console.log(el.value);
 			ajax('templates/' + el.value + '.js', function(val) {
 				codemirror.setValue(val);
+				compile();
 			});
 		}
 
@@ -222,6 +235,7 @@ background: orange;
 			console.log(el.value);
 			ajax('templates/' + el.value + '.js', function(val) {
 				codemirror.replaceSelection(val);
+				compile();
 			});
 		}
 
