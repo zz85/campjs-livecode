@@ -73,7 +73,6 @@
 
 		function init() {
 			status_pane = document.getElementById('status');
-			preview = document.getElementById('preview');
 
 			codemirror = CodeMirror( document.querySelector('editor'), {
 				value: '',
@@ -127,15 +126,27 @@
 			preview.contentWindow.eval(script)
 		}
 
-		function reload(html) {
+		function reload(code) {
 			preview.contentDocument.body.innerHTML = '';
 			preview.contentDocument.write(code);
 		}
 
 		function test() {
 			ajax('bootstrap.html', function(code) {
-				reload(html);
+				reload(code);
 			})
+		}
+
+		function createPreview() {
+			var p = document.querySelector('preview');
+			if (preview) {
+				p.removeChild(preview);
+			}
+
+			preview = document.createElement('iframe');
+			preview.id = 'preview';
+			p.appendChild(preview);
+			preview.src = 'about:blank';
 		}
 
 	</script>
@@ -146,7 +157,7 @@
 		</editor>
 
 		<preview>
-			<iframe id="preview" src="about:none"></iframe>
+			<!-- <iframe id="preview" src="about:none"></iframe> -->
 		</preview>
 	</container>
 </body>
