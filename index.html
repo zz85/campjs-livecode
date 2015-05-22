@@ -54,6 +54,13 @@
 		display: block;
 		border-top: 1px solid white;
 	}
+
+	.CodeMirror {
+		border: 1px solid #eee;
+		height: auto;
+	}
+
+
 	</style>
 
 	<link rel="stylesheet" href="libs/codemirror.css">
@@ -67,7 +74,7 @@
 		var codemirror;
 		var delay, status_pane;
 
-		var preview;
+		var preview, boilerplate;
 
 		window.addEventListener('load', init);
 
@@ -108,6 +115,10 @@
 
 			});
 
+			ajax('bootstrap.html', function(code) {
+				boilerplate = code.split('${script}')
+			})
+
 		}
 
 		function ajax(url, callback) {
@@ -117,7 +128,6 @@
 			request.onload = function() {
 				var response = request.response;
 				if (callback) callback(response)
-				// console.log('response', response)
 			}
 
 			request.send();
@@ -135,18 +145,15 @@
 			// scriptTag.textContent = script;
 			// doc.body.appendChild(scriptTag);
 
-			reload('<html><body><script>' + script + '</sc' + 'ript></body></html>');
+			inject(boilerplate[0] + script + boilerplate[1]);
 		}
 
-		function reload(code) {
-			// preview.contentDocument.body.innerHTML = code;
+		function inject(code) {
 			preview.contentDocument.write(code);
 		}
 
 		function test() {
-			ajax('bootstrap.html', function(code) {
-				reload(code);
-			})
+			
 		}
 
 		function destoryAndCreatePreview() {
