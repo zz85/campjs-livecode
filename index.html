@@ -49,6 +49,7 @@ background: orange;
 		width: 100%;
 		height: 100%;
 		border: 1px solid #eee;
+
 	}
 
 	#status_pane {
@@ -69,6 +70,9 @@ background: orange;
 		padding: 4px;
 		background: #ddd;
 		color: #333;
+		position: fixed;
+		z-index: 10;
+		bottom: 0;
 	}
 
 	label {
@@ -99,10 +103,14 @@ background: orange;
 			codemirror = CodeMirror( document.querySelector('editor'), {
 				value: '',
 				lineNumbers: true,
+				mode: 'javascript',
 				matchBrackets: true,
 				indentWithTabs: true,
 				tabSize: 4,
-				indentUnit: 4
+				indentUnit: 4,
+				lineWrapping: true,
+				matchBrackets: true,
+				autoCloseBrackets: true,
 			} );
 			codemirror.setOption( 'theme', 'monokai' );
 			codemirror.on( 'change', function () {
@@ -128,6 +136,8 @@ background: orange;
 			// populate dropdown
 
 			templates.innerHTML  = '<option value="">--Load--</option><option>draw</option>'
+
+			insert_templates.innerHTML  = '<option value="">--Insert--</option><option>circle</option>'
 
 		}
 
@@ -199,7 +209,7 @@ background: orange;
 			status_pane.innerHTML = 'oops... ' + e;
 		}
 
-		function template(el) {
+		function load_template(el) {
 			if (!el.value) return;
 			console.log(el.value);
 			ajax('templates/' + el.value + '.js', function(val) {
@@ -207,10 +217,18 @@ background: orange;
 			});
 		}
 
+		function insert_template(el) {
+			if (!el.value) return;
+			console.log(el.value);
+			ajax('templates/' + el.value + '.js', function(val) {
+				codemirror.replaceSelection(val);
+			});
+		}
+
 	</script>
 
 	<header>
-		Simple Live Code Editor <button>Run</button> <input type="checkbox" id="auto"/> <label>Auto-run</label> <select id="templates" onchange="template(this);"></select>
+		Simple Live Code Editor <button>Run</button> <input type="checkbox" id="auto"/> <label>Auto-run</label> <select id="templates" onchange="load_template(this);"></select> <select id="insert_templates" onchange="insert_template(this);"></select>
 		<div id="status_pane"></div>
 	</header>
 	<container>
