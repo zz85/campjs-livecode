@@ -65,14 +65,14 @@
 	<script>
 
 		var codemirror;
-		var delay, status;
+		var delay, status_pane;
 
 		var preview;
 
 		window.addEventListener('load', init);
 
 		function init() {
-			status_pane = document.getElementById('status');
+			status_pane = document.getElementById('status_pane');
 
 			codemirror = CodeMirror( document.querySelector('editor'), {
 				value: '',
@@ -92,8 +92,9 @@
 
 					try {
 						acorn.parse(code);
-
 						status_pane.innerHTML = '';
+
+						runCode(code);
 					} catch (e) {
 						
 						var loc = e.loc;
@@ -122,12 +123,23 @@
 			request.send();
 		}
 
+		function runCode(code) {
+			destoryAndCreatePreview();
+			update(code);
+		}
+
 		function update(script) {
-			preview.contentWindow.eval(script)
+			// preview.contentWindow.eval(script)
+			// var doc = preview.contentDocument;
+			// var scriptTag = doc.createElement('script');
+			// scriptTag.textContent = script;
+			// doc.body.appendChild(scriptTag);
+
+			reload('<html><body><script>' + script + '</sc' + 'ript></body></html>');
 		}
 
 		function reload(code) {
-			preview.contentDocument.body.innerHTML = '';
+			// preview.contentDocument.body.innerHTML = code;
 			preview.contentDocument.write(code);
 		}
 
@@ -137,7 +149,7 @@
 			})
 		}
 
-		function createPreview() {
+		function destoryAndCreatePreview() {
 			var p = document.querySelector('preview');
 			if (preview) {
 				p.removeChild(preview);
@@ -153,11 +165,10 @@
 
 	<container>
 		<editor>
-			<div id="status">Status: </div>
+			<div id="status_pane">Status: </div>
 		</editor>
 
 		<preview>
-			<!-- <iframe id="preview" src="about:none"></iframe> -->
 		</preview>
 	</container>
 </body>
