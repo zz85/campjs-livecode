@@ -6,7 +6,11 @@
 		}
 	</style>
 	<script>
+	try {
 		${script}
+	} catch (e) {
+		window.parent.reportError(e);
+	}
 	</script>
 </body>
 </html>

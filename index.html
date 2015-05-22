@@ -71,6 +71,10 @@ background: orange;
 		color: #333;
 	}
 
+	label {
+		font-size: 12px;
+	}
+
 
 	</style>
 
@@ -106,21 +110,7 @@ background: orange;
 				clearTimeout( delay );
 				delay = setTimeout( function () {
 
-					var code = codemirror.getValue();
-
-					try {
-						acorn.parse(code);
-						status_pane.innerHTML = '';
-
-						runCode(code);
-					} catch (e) {
-						
-						var loc = e.loc;
-
-						status_pane.innerHTML = 'Error on line ' + loc.line + ' column ' + loc.column;
-
-						console.log('Error on line ' + loc.line + ' column ' + loc.column);
-					}
+					if (auto.checked) compile();
 
 				}, 300 );
 
@@ -130,6 +120,32 @@ background: orange;
 				boilerplate = code.split('${script}')
 			})
 
+			window.addEventListener('keydown', function(e) {
+				// console.log(e);
+				if (e.which === 13 && e.metaKey) compile();
+			});
+
+			// populate dropdown
+
+			templates.innerHTML  = '<option value="">--Load--</option><option>draw</option>'
+
+		}
+
+		function compile() {
+			var code = codemirror.getValue();
+
+			try {
+				acorn.parse(code);
+				status_pane.innerHTML = '';
+
+				runCode(code);
+			} catch (e) {
+				var loc = e.loc;
+
+				status_pane.innerHTML = 'Error on line ' + loc.line + ' column ' + loc.column;
+
+				console.log('Error on line ' + loc.line + ' column ' + loc.column);
+			}
 		}
 
 		function ajax(url, callback) {
@@ -179,10 +195,22 @@ background: orange;
 			preview.src = 'about:blank';
 		}
 
+		function reportError(e) {
+			status_pane.innerHTML = 'oops... ' + e;
+		}
+
+		function template(el) {
+			if (!el.value) return;
+			console.log(el.value);
+			ajax('templates/' + el.value + '.js', function(val) {
+				codemirror.setValue(val);
+			});
+		}
+
 	</script>
 
 	<header>
-		Simple Live Code Editor
+		Simple Live Code Editor <button>Run</button> <input type="checkbox" id="auto"/> <label>Auto-run</label> <select id="templates" onchange="template(this);"></select>
 		<div id="status_pane"></div>
 	</header>
 	<container>
