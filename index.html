@@ -7,29 +7,36 @@
 
 	<style>
 	body {
+
 		width: 100%;
 		height: 100%;
 		margin: 0;
 		overflow: hidden;
+		background: black;
+		color: #ddd;
+		font-size: 20px;
 	}
 
 	editor {
 		float: left;
 		position: absolute;
 		display: block;
-		border: 1px solid black;
+		border: 1px solid #eee;
 		height: 100%;
 		width: 50%;
+
 	}
 
 	preview {
 		position: absolute;
 		display: block;
-		border: 1px solid black;
+		border: 1px solid #eee;
+/*		border: 1px solid black;
+background: orange;
+*/
 		height: 100%;
 		width: 50%;
 		left: 50%;
-		background: orange;
 	}
 
 	#preview {
@@ -41,23 +48,27 @@
 		display: block;
 		width: 100%;
 		height: 100%;
+		border: 1px solid #eee;
 	}
 
-	#status {
+	#status_pane {
 		display: block;
-		position: absolute;
 		bottom: 0;
 		color: red;
 		width: 100%;
 		left: 0;
 		background: black;
 		display: block;
-		border-top: 1px solid white;
 	}
 
 	.CodeMirror {
-		border: 1px solid #eee;
-		height: auto;
+		border: none;
+	}
+
+	header {
+		padding: 4px;
+		background: #ddd;
+		color: #333;
 	}
 
 
@@ -170,9 +181,13 @@
 
 	</script>
 
+	<header>
+		Simple Live Code Editor
+		<div id="status_pane"></div>
+	</header>
 	<container>
 		<editor>
-			<div id="status_pane">Status: </div>
+			
 		</editor>
 
 		<preview>
