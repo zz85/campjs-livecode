@@ -101,6 +101,10 @@ background: orange;
 		function init() {
 			status_pane = document.getElementById('status_pane');
 
+			ajax('bootstrap.html', function(code) {
+				boilerplate = code.split('${script}')
+			})
+
 			savedCode = LOCALSTORAGE_KEY in localStorage ?
 				localStorage[LOCALSTORAGE_KEY] : '';
 
@@ -130,10 +134,6 @@ background: orange;
 
 			});
 
-			ajax('bootstrap.html', function(code) {
-				boilerplate = code.split('${script}')
-			})
-
 			window.addEventListener('keydown', function(e) {
 				// console.log(e);
 				if (e.which === 13 && e.metaKey) compileAndRun();
@@ -141,7 +141,7 @@ background: orange;
 
 			// populate dropdown
 			templates.innerHTML  = '<option value="">--Load--</option>\
-			<option>draw</option>\
+			<option>simulate_particles</option>\
 			<option>particle5d</option>\
 			<option>particle4b</option>\
 			<option>particle3d</option>\
@@ -156,10 +156,26 @@ background: orange;
 			<option>particle1</option>'
 
 			insert_templates.innerHTML  = '<option value="">--Insert--</option>\
+			<option>draw</option>\
 			<option>circle</option>\
 			<option>mousemove</option>\
 			<option>webrtc</option>\
-			<option>text</option>'
+			<option>text</option>';
+
+			if (location.hash) {
+				ajax('templates/' + location.hash.substring(1) + '.js', function(val) {
+					codemirror.setValue(val);
+					compileAndRun();
+				});
+			} else {
+				if (!savedCode) {
+					templates.value = 'simulate_particles';
+					templates.onchange();
+				}
+
+				setTimeout(compileAndRun, 500);
+			}
+			
 		}
 
 		function compileAndRun() {
@@ -242,7 +258,6 @@ background: orange;
 
 		function load_template(el) {
 			if (!el.value) return;
-			console.log(el.value);
 			ajax('templates/' + el.value + '.js', function(val) {
 				codemirror.setValue(val);
 				compileAndRun();
@@ -251,7 +266,6 @@ background: orange;
 
 		function insert_template(el) {
 			if (!el.value) return;
-			console.log(el.value);
 			ajax('templates/' + el.value + '.js', function(val) {
 				codemirror.replaceSelection(val);
 				compileAndRun();

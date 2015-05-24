@@ -11,6 +11,7 @@ var NUMBER = 1000;
 var particles = [];
 var HALF_PI = Math.PI * 0.5;
 var TWO_PI = Math.PI * 2;
+var HISTORY = 150;
 
 function Vector(x, y) {
 	this.x = x;
@@ -43,7 +44,7 @@ function Particle(x, y) {
     y = Math.sin(r) * q;
 	this.velocity = new Vector(x, y);
 	
-	var history = new Array(1000);
+	var history = new Array(HISTORY);
 	
 	for (var i = 0; i < history.length; i++) {
 		history[i] = new Vector();
@@ -70,7 +71,7 @@ Particle.prototype.update = function(save) {
 }
 
 Particle.prototype.draw = function() {
-	ctx.strokeStyle = '#888'
+	ctx.strokeStyle = '#333'
 	
 	ctx.beginPath();
 	var item = this.history[0];
@@ -89,7 +90,7 @@ Particle.prototype.draw = function() {
 
 function init() {
 	for (var i = 0; i < NUMBER; i++ ) {
-		particles.push(new Particle(Math.random() * window.innerWidth * 0.5, Math.random() * window.innerHeight * 0.8));
+		particles.push(new Particle(100, 100));
 	}
 }
 
@@ -119,20 +120,20 @@ function drawArrowHead(particle) {
 var draws = 0;
 
 function draw() {
+	if (draws === HISTORY * 10) return;
 	requestAnimationFrame(draw);
 	
+	ctx.save()
+	ctx.globalCompositeOperation = 'lighter'
 	draws++;
-	
 	var save = draws % 10 === 0;
-
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 	for (var i = 0; i < particles.length; i++ ) {
 		particles[i].update(save);
 		particles[i].draw();
 	}
-	
-	// drawArrowHead();
+	ctx.restore();
 }
 
 init();
