@@ -118,7 +118,8 @@ background: orange;
 				clearTimeout( delay );
 				delay = setTimeout( function () {
 
-					if (auto.checked) compile();
+					compile();
+					if (auto.checked) compileAndRun();
 
 				}, 300 );
 
@@ -130,12 +131,15 @@ background: orange;
 
 			window.addEventListener('keydown', function(e) {
 				// console.log(e);
-				if (e.which === 13 && e.metaKey) compile();
+				if (e.which === 13 && e.metaKey) compileAndRun();
 			});
 
 			// populate dropdown
 			templates.innerHTML  = '<option value="">--Load--</option>\
 			<option>draw</option>\
+			<option>particle5d</option>\
+			<option>particle4b</option>\
+			<option>particle3d</option>\
 			<option>particle3c</option>\
 			<option>particle3b</option>\
 			<option>particle3a</option>\
@@ -149,8 +153,14 @@ background: orange;
 			insert_templates.innerHTML  = '<option value="">--Insert--</option>\
 			<option>circle</option>\
 			<option>mousemove</option>\
+			<option>webrtc</option>\
 			<option>text</option>'
 
+		}
+
+		function compileAndRun() {
+			var code = codemirror.getValue();
+			if (compile()) runCode(code);
 		}
 
 		function compile() {
@@ -159,15 +169,16 @@ background: orange;
 			try {
 				acorn.parse(code);
 				status_pane.innerHTML = '';
-
-				runCode(code);
 			} catch (e) {
 				var loc = e.loc;
 
 				status_pane.innerHTML = 'Error on line ' + loc.line + ' column ' + loc.column;
 
 				console.log('Error on line ' + loc.line + ' column ' + loc.column);
+				return false;
 			}
+
+			return true;
 		}
 
 		function ajax(url, callback) {
@@ -226,7 +237,7 @@ background: orange;
 			console.log(el.value);
 			ajax('templates/' + el.value + '.js', function(val) {
 				codemirror.setValue(val);
-				compile();
+				compileAndRun();
 			});
 		}
 
@@ -235,7 +246,7 @@ background: orange;
 			console.log(el.value);
 			ajax('templates/' + el.value + '.js', function(val) {
 				codemirror.replaceSelection(val);
-				compile();
+				compileAndRun();
 			});
 		}
 
