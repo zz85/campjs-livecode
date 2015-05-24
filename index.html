@@ -94,14 +94,18 @@ background: orange;
 		var delay, status_pane;
 
 		var preview, boilerplate;
+		var LOCALSTORAGE_KEY = 'simple-live-code-editor';
 
 		window.addEventListener('load', init);
 
 		function init() {
 			status_pane = document.getElementById('status_pane');
 
+			savedCode = LOCALSTORAGE_KEY in localStorage ?
+				localStorage[LOCALSTORAGE_KEY] : '';
+
 			codemirror = CodeMirror( document.querySelector('editor'), {
-				value: '',
+				value: savedCode,
 				lineNumbers: true,
 				mode: 'javascript',
 				matchBrackets: true,
@@ -121,6 +125,7 @@ background: orange;
 					compile();
 					if (auto.checked) compileAndRun();
 
+					save()
 				}, 300 );
 
 			});
@@ -155,12 +160,15 @@ background: orange;
 			<option>mousemove</option>\
 			<option>webrtc</option>\
 			<option>text</option>'
-
 		}
 
 		function compileAndRun() {
 			var code = codemirror.getValue();
 			if (compile()) runCode(code);
+		}
+
+		function save() {
+			localStorage[LOCALSTORAGE_KEY] = codemirror.getValue();
 		}
 
 		function compile() {
