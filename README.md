@@ -18,6 +18,7 @@ There are 2 dropdown where one is for loading examples, and another is for inser
 Feel free to contact me on twitter [@blurspline](https://twitter.com/blurspline) if you've got comments or suggestions.
 
 In case you are interested with other tools that does hot-reloading with JS, checkout
+- mrdoob's [html editor](http://mrdoob.com/projects/htmleditor/) [(source)[https://github.com/mrdoob/htmleditor/]
 - jsbin, jsfiddle, codepen
 - chrome dev tools
 - lighttable ide
