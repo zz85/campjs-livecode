@@ -2,6 +2,8 @@
 
 On the flight to Melbourne for CampJS, I was thinking how I would be able to live code and show some examples for my talk on particles. So that's how yet another live coding editor came about. It's nothing really groundbreaking, but I just wanted it to be something I'm comfortable with.
 
+[Example](https://zz85.github.io/campjs-livecode/#simulate_particles)
+
 ## Under the hood
 I use some hardcoded CSS to split the screen into two - code on the left, preview on the right. That is one layout that works well with me, but someday I should allow code/preview on the top/bottom.
 
@@ -18,7 +20,7 @@ There are 2 dropdown where one is for loading examples, and another is for inser
 Feel free to contact me on twitter [@blurspline](https://twitter.com/blurspline) if you've got comments or suggestions.
 
 In case you are interested with other tools that does hot-reloading with JS, checkout
-- mrdoob's [html editor](http://mrdoob.com/projects/htmleditor/) [(source)[https://github.com/mrdoob/htmleditor/]
+- mrdoob's [html editor](http://mrdoob.com/projects/htmleditor/) [(source)](https://github.com/mrdoob/htmleditor/)
 - jsbin, jsfiddle, codepen
 - chrome dev tools
 - lighttable ide
