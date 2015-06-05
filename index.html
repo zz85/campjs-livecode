@@ -4,13 +4,28 @@
 	<meta charset="utf-8">
 </head>
 <body>
+	<link rel="stylesheet" href="libs/codemirror.css">
+	<link rel="stylesheet" href="libs/monokai.css">
+	<script src="libs/codemirror.js"></script>
+	<script src="libs/javascript.js"></script>
+	<script src="libs/acorn.js"></script>
+	<script src="libs/searchcursor.js"></script> <!-- support token selection -->
+	<script src="libs/search.js"></script>
+	<!--<script src="libs/dialog.js"></script>--> <!-- support inline search dialog -->
+	<script src="libs/comment.js"></script> <!-- support comment keyboard shortcuts -->
+	<script src="libs/hardwrap.js"></script> <!-- support comment keyboard shortcuts -->
+	<script src="libs/matchbrackets.js"></script><!-- support highlighting brackets -->
+	<script src="libs/closebrackets.js"></script><!-- auto close brackets -->
+	<script src="libs/foldcode.js"></script><!-- code folding -->
+	<script src="libs/sublime.js"></script><!-- sublime key bindings -->
+
 	<style>
 
 	body {
 
 		width: 100%;
 		height: 100%;
-		margin: 0;
+		margin: 0;	
 		overflow: hidden;
 		background: black;
 		color: #ddd;
@@ -64,6 +79,8 @@ background: orange;
 
 	.CodeMirror {
 		border: none;
+		height: auto;
+		font-size: 14px;
 	}
 
 	header {
@@ -81,12 +98,6 @@ background: orange;
 
 
 	</style>
-
-	<link rel="stylesheet" href="libs/codemirror.css">
-	<link rel="stylesheet" href="libs/monokai.css">
-	<script src="libs/codemirror.js"></script>
-	<script src="libs/javascript.js"></script>
-	<script src="libs/acorn.js"></script>
 
 	<script>
 
@@ -112,15 +123,17 @@ background: orange;
 				value: savedCode,
 				lineNumbers: true,
 				mode: 'javascript',
-				matchBrackets: true,
 				indentWithTabs: true,
 				tabSize: 4,
 				indentUnit: 4,
 				lineWrapping: true,
-				matchBrackets: true,
 				autoCloseBrackets: true,
+				matchBrackets: true,
+				keyMap: "sublime",
+				showCursorWhenSelecting: true,
+				theme: 'monokai'
 			} );
-			codemirror.setOption( 'theme', 'monokai' );
+			// codemirror.setOption( 'theme', 'monokai' );
 			codemirror.on( 'change', function () {
 
 				clearTimeout( delay );
