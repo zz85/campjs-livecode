@@ -4,37 +4,41 @@
 	<meta charset="utf-8">
 </head>
 <body>
-	<link rel="stylesheet" href="libs/codemirror.css">
-	<link rel="stylesheet" href="libs/monokai.css">
-	<link rel="stylesheet" href="libs/dialog.css">
-	<link rel="stylesheet" href="libs/show-hint.css">
-	<link rel="stylesheet" href="libs/tern.css">
+	<link rel="stylesheet" href="libs/codemirror/codemirror.css">
+	<link rel="stylesheet" href="libs/codemirror/monokai.css">
+	<link rel="stylesheet" href="libs/codemirror/dialog.css">
+	<link rel="stylesheet" href="libs/codemirror/show-hint.css">
+	<link rel="stylesheet" href="libs/codemirror/tern.css">
 
-	<script src="libs/codemirror.js"></script>
-	<script src="libs/javascript.js"></script>
-	<script src="libs/acorn.js"></script>
 
-	<script src="libs/show-hint.js"></script>
-	<script src="libs/tern-codemirror.js"></script>
-	<script src="libs/acorn_loose.js"></script>
-	<script src="libs/walk.js"></script>
-	<script src="libs/polyfill.js"></script>
-	<script src="libs/signal.js"></script>
-	<script src="libs/tern.js"></script>
-	<script src="libs/def.js"></script>
-	<script src="libs/comment.js"></script>
-	<script src="libs/infer.js"></script>
-	<script src="libs/doc_comment.js"></script>
+	<script src="libs/codemirror/codemirror.js"></script>
+	<script src="libs/codemirror/javascript.js"></script>
 
-	<script src="libs/searchcursor.js"></script> <!-- support token selection -->
-	<script src="libs/search.js"></script>
-	<script src="libs/dialog.js"></script> <!-- support inline search dialog -->
-	<script src="libs/comment.js"></script> <!-- support comment keyboard shortcuts -->
-	<script src="libs/hardwrap.js"></script> <!-- support comment keyboard shortcuts -->
-	<script src="libs/matchbrackets.js"></script> <!-- support highlighting brackets -->
-	<script src="libs/closebrackets.js"></script> <!-- auto close brackets -->
-	<script src="libs/foldcode.js"></script> <!-- code folding -->
-	<script src="libs/sublime.js"></script> <!-- sublime key bindings -->
+	<script src="libs/acorn/acorn.js"></script>
+	<script src="libs/acorn/acorn_loose.js"></script>
+	<script src="libs/acorn/walk.js"></script>
+
+	<script src="libs/codemirror/show-hint.js"></script>
+	<script src="libs/codemirror/tern-codemirror.js"></script>
+	<script src="libs/codemirror/searchcursor.js"></script> <!-- support token selection -->
+	<script src="libs/codemirror/search.js"></script>
+	<script src="libs/codemirror/dialog.js"></script> <!-- support inline search dialog -->
+	<script src="libs/codemirror/comment.js"></script> <!-- support comment keyboard shortcuts -->
+	<script src="libs/codemirror/hardwrap.js"></script> <!-- support comment keyboard shortcuts -->
+	<script src="libs/codemirror/matchbrackets.js"></script> <!-- support highlighting brackets -->
+	<script src="libs/codemirror/closebrackets.js"></script> <!-- auto close brackets -->
+	<script src="libs/codemirror/foldcode.js"></script> <!-- code folding -->
+	<script src="libs/codemirror/sublime.js"></script> <!-- sublime key bindings -->
+
+	<script src="libs/ternjs/polyfill.js"></script>
+	<script src="libs/ternjs/signal.js"></script>
+	<script src="libs/ternjs/tern.js"></script>
+	<script src="libs/ternjs/def.js"></script>
+	<script src="libs/ternjs/comment.js"></script>
+	<script src="libs/ternjs/infer.js"></script>
+	<script src="libs/ternjs/doc_comment.js"></script>
+
+
 
 	<style>
 
@@ -215,17 +219,23 @@ background: orange;
 			var server;
 
 		  	function start(code) {
-				server = new CodeMirror.TernServer({defs: code, caseInsensitive: true, plugins: {threejs: null}});
-				codemirror.setOption("extraKeys", {
-					"Ctrl-Space": function(cm) { server.complete(cm); },
-					"Ctrl-I": function(cm) { server.showType(cm); },
-					"Ctrl-O": function(cm) { server.showDocs(cm); },
-					"Alt-.": function(cm) { server.jumpToDef(cm); },
-					"Alt-,": function(cm) { server.jumpBack(cm); },
-					"Ctrl-Q": function(cm) { server.rename(cm); },
-					"Ctrl-.": function(cm) { server.selectName(cm); }
+				server = new CodeMirror.TernServer({defs: code, caseInsensitive: true, plugins: {threejs: null},
+					// responseFilter: function(doc, query, request, error, data) {
+					// 	console.log('response', arguments)
+					// 	return data;
+					// }
+				});
+
+				codemirror.setOption('extraKeys', {
+					'Ctrl-Space': function(cm) { server.complete(cm); },
+					'Ctrl-I': function(cm) { server.showType(cm); },
+					'Ctrl-O': function(cm) { server.showDocs(cm); },
+					'Alt-.': function(cm) { server.jumpToDef(cm); },
+					'Alt-,': function(cm) { server.jumpBack(cm); },
+					'Ctrl-Q': function(cm) { server.rename(cm); },
+					'Ctrl-.': function(cm) { server.selectName(cm); }
 				})
-				codemirror.on("cursorActivity", function(cm) {
+				codemirror.on('cursorActivity', function(cm) {
 					server.updateArgHints(cm);
 				});
 
