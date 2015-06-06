@@ -6,18 +6,35 @@
 <body>
 	<link rel="stylesheet" href="libs/codemirror.css">
 	<link rel="stylesheet" href="libs/monokai.css">
+	<link rel="stylesheet" href="libs/dialog.css">
+	<link rel="stylesheet" href="libs/show-hint.css">
+	<link rel="stylesheet" href="libs/tern.css">
+
 	<script src="libs/codemirror.js"></script>
 	<script src="libs/javascript.js"></script>
 	<script src="libs/acorn.js"></script>
+
+	<script src="libs/show-hint.js"></script>
+	<script src="libs/tern-codemirror.js"></script>
+	<script src="libs/acorn_loose.js"></script>
+	<script src="libs/walk.js"></script>
+	<script src="libs/polyfill.js"></script>
+	<script src="libs/signal.js"></script>
+	<script src="libs/tern.js"></script>
+	<script src="libs/def.js"></script>
+	<script src="libs/comment.js"></script>
+	<script src="libs/infer.js"></script>
+	<script src="libs/doc_comment.js"></script>
+
 	<script src="libs/searchcursor.js"></script> <!-- support token selection -->
 	<script src="libs/search.js"></script>
-	<!--<script src="libs/dialog.js"></script>--> <!-- support inline search dialog -->
+	<script src="libs/dialog.js"></script> <!-- support inline search dialog -->
 	<script src="libs/comment.js"></script> <!-- support comment keyboard shortcuts -->
 	<script src="libs/hardwrap.js"></script> <!-- support comment keyboard shortcuts -->
-	<script src="libs/matchbrackets.js"></script><!-- support highlighting brackets -->
-	<script src="libs/closebrackets.js"></script><!-- auto close brackets -->
-	<script src="libs/foldcode.js"></script><!-- code folding -->
-	<script src="libs/sublime.js"></script><!-- sublime key bindings -->
+	<script src="libs/matchbrackets.js"></script> <!-- support highlighting brackets -->
+	<script src="libs/closebrackets.js"></script> <!-- auto close brackets -->
+	<script src="libs/foldcode.js"></script> <!-- code folding -->
+	<script src="libs/sublime.js"></script> <!-- sublime key bindings -->
 
 	<style>
 
@@ -100,7 +117,6 @@ background: orange;
 	</style>
 
 	<script>
-
 		var codemirror;
 		var delay, status_pane;
 
@@ -119,7 +135,7 @@ background: orange;
 			savedCode = LOCALSTORAGE_KEY in localStorage ?
 				localStorage[LOCALSTORAGE_KEY] : '';
 
-			codemirror = CodeMirror( document.querySelector('editor'), {
+			codemirror = CodeMirror(document.querySelector('editor'), {
 				value: savedCode,
 				lineNumbers: true,
 				mode: 'javascript',
@@ -129,12 +145,15 @@ background: orange;
 				lineWrapping: true,
 				autoCloseBrackets: true,
 				matchBrackets: true,
-				keyMap: "sublime",
+				keyMap: 'sublime',
 				showCursorWhenSelecting: true,
-				theme: 'monokai'
-			} );
-			// codemirror.setOption( 'theme', 'monokai' );
-			codemirror.on( 'change', function () {
+				theme: 'monokai',
+				hintOptions: {
+					completeSingle: false
+				}
+			});
+
+			codemirror.on('change', function () {
 
 				clearTimeout( delay );
 				delay = setTimeout( function () {
@@ -188,7 +207,40 @@ background: orange;
 
 				setTimeout(compileAndRun, 500);
 			}
-			
+
+			initAutocomplete();
+		}
+
+		function initAutocomplete() {
+			var server;
+
+		  	function start(code) {
+				server = new CodeMirror.TernServer({defs: code, caseInsensitive: true, plugins: {threejs: null}});
+				codemirror.setOption("extraKeys", {
+					"Ctrl-Space": function(cm) { server.complete(cm); },
+					"Ctrl-I": function(cm) { server.showType(cm); },
+					"Ctrl-O": function(cm) { server.showDocs(cm); },
+					"Alt-.": function(cm) { server.jumpToDef(cm); },
+					"Alt-,": function(cm) { server.jumpBack(cm); },
+					"Ctrl-Q": function(cm) { server.rename(cm); },
+					"Ctrl-.": function(cm) { server.selectName(cm); }
+				})
+				codemirror.on("cursorActivity", function(cm) {
+					server.updateArgHints(cm);
+				});
+
+				codemirror.on('keypress', function(cm, kb) {
+					var typed = String.fromCharCode(kb.which || kb.keyCode);
+					if (/[\w\.]/.exec(typed)) {
+						server.complete(cm);
+					}
+				})
+			}
+
+			// ajax("libs/ecma5.json", function(code) {
+			// 	start([JSON.parse(code)]);
+			// })
+			start();
 		}
 
 		function compileAndRun() {
