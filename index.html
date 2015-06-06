@@ -38,8 +38,6 @@
 	<script src="libs/ternjs/infer.js"></script>
 	<script src="libs/ternjs/doc_comment.js"></script>
 
-
-
 	<style>
 
 	body {
@@ -247,10 +245,19 @@ background: orange;
 				})
 			}
 
-			// ajax("libs/ecma5.json", function(code) {
-			// 	start([JSON.parse(code)]);
-			// })
-			start();
+			var defs = [];
+
+
+			
+			ajax("libs/ternjs/browser.json", function(code) {
+				defs.push(JSON.parse(code));
+				ajax("libs/ternjs/ecma5.json", function(code) {
+					defs.push(JSON.parse(code));
+					start(defs);
+				})
+			})
+
+			// start();
 		}
 
 		function compileAndRun() {
