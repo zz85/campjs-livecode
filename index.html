@@ -115,10 +115,13 @@ background: orange;
 		font-size: 12px;
 	}
 
-
 	</style>
 
 	<script>
+		// TODO
+		// dynamic windows (resizing / arrangement / textwrap options)
+		// add templates-hint, gutter errors, lint, active line
+
 		var codemirror;
 		var delay, status_pane;
 
@@ -156,7 +159,6 @@ background: orange;
 			});
 
 			codemirror.on('change', function () {
-
 				clearTimeout( delay );
 				delay = setTimeout( function () {
 
@@ -165,7 +167,6 @@ background: orange;
 
 					save()
 				}, 300 );
-
 			});
 
 			window.addEventListener('keydown', function(e) {
@@ -246,10 +247,8 @@ background: orange;
 				})
 			}
 
+			// Load ternjs definations
 			var defs = [];
-
-
-			
 			ajax("libs/ternjs/browser.json", function(code) {
 				defs.push(JSON.parse(code));
 				ajax("libs/ternjs/ecma5.json", function(code) {
