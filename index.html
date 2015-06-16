@@ -324,7 +324,14 @@ background: orange;
 		}
 
 		function inject(code) {
-			preview.contentDocument.write(code);
+			var content = preview.contentDocument || preview.contentWindow.document;
+
+			// fix for safari :(
+			code = code.replace('<script>', '<script>if ( window.innerWidth === 0 ) { window.innerWidth = parent.innerWidth / 2; window.innerHeight = parent.innerHeight; }');
+
+			content.open();
+			content.write(code);
+			content.close();
 		}
 
 		function test() {
@@ -341,6 +348,9 @@ background: orange;
 			preview.id = 'preview';
 			p.appendChild(preview);
 			preview.src = 'about:blank';
+			preview.style.width = '100%';
+			preview.style.height = '100%';
+			preview.style.border = '0';
 		}
 
 		function reportError(e) {
