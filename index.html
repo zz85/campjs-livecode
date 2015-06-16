@@ -219,7 +219,16 @@ background: orange;
 			var server;
 
 		  	function start(code) {
-				server = new CodeMirror.TernServer({defs: code, caseInsensitive: true, plugins: {threejs: null},
+				server = new CodeMirror.TernServer({
+						defs: code,
+						queryOptions: {
+							completions: {
+								caseInsensitive: true
+							}
+						},
+						plugins: {
+							threejs: null
+						},
 					// responseFilter: function(doc, query, request, error, data) {
 					// 	console.log('response', arguments)
 					// 	return data;
