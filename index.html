@@ -21,6 +21,8 @@
 	<script src="libs/codemirror/show-hint.js"></script>
 	<script src="libs/codemirror/tern-codemirror.js"></script>
 	<script src="libs/codemirror/searchcursor.js"></script> <!-- support token selection -->
+	<script src="libs/codemirror/active-line.js"></script> <!-- active-line selection -->
+
 	<script src="libs/codemirror/search.js"></script>
 	<script src="libs/codemirror/dialog.js"></script> <!-- support inline search dialog -->
 	<script src="libs/codemirror/comment.js"></script> <!-- support comment keyboard shortcuts -->
@@ -120,8 +122,7 @@ background: orange;
 	<script>
 		// TODO
 		// dynamic windows (resizing / arrangement / textwrap options)
-		// add templates-hint, gutter errors, lint, active line
-
+		// add templates-hint, gutter errors, lint
 		var codemirror;
 		var delay, status_pane;
 
@@ -155,7 +156,8 @@ background: orange;
 				theme: 'monokai',
 				hintOptions: {
 					completeSingle: false
-				}
+				},
+				styleActiveLine: true
 			});
 
 			codemirror.on('change', function () {
