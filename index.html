@@ -9,6 +9,7 @@
 	<link rel="stylesheet" href="libs/codemirror/dialog.css">
 	<link rel="stylesheet" href="libs/codemirror/show-hint.css">
 	<link rel="stylesheet" href="libs/codemirror/tern.css">
+	<link rel="stylesheet" href="libs/codemirror/inlet.css">
 
 
 	<script src="libs/codemirror/codemirror.js"></script>
@@ -39,6 +40,8 @@
 	<script src="libs/ternjs/comment.js"></script>
 	<script src="libs/ternjs/infer.js"></script>
 	<script src="libs/ternjs/doc_comment.js"></script>
+
+	<script src="libs/codemirror/inlet.js"></script>
 
 	<style>
 
@@ -159,6 +162,8 @@ background: orange;
 				},
 				styleActiveLine: true
 			});
+
+			var inlet = Inlet(codemirror);
 
 			codemirror.on('change', function () {
 				clearTimeout( delay );
