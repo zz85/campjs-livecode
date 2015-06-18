@@ -212,8 +212,21 @@
           cm.getRange(to, Pos(to.line, to.ch + 2)) != "\"]")
         after = "\"]";
 
+      var typing = cm.getRange(from, to).toLowerCase();
+      // data.completions = data.completions.filter(function(completion) {
+      //   return completion.name.toLowerCase().startsWith(typing);
+      // });
+
       for (var i = 0; i < data.completions.length; ++i) {
-        var completion = data.completions[i], className = typeToIcon(completion.type);
+        var completion = data.completions[i], className = typeToIcon(completion.type); 
+        // if (!completion.name.toLowerCase().startsWith(typing)) continue;
+        // if (completion.name.toLowerCase().indexOf(typing) < 0) continue;
+
+        // perfect match
+        // left match
+        // inside match
+        // fuzzy match.
+
         if (data.guess) className += " " + cls + "guess";
         completions.push({text: completion.name + after,
                           displayText: completion.name,
