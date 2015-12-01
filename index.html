@@ -49,7 +49,7 @@
 
 		width: 100%;
 		height: 100%;
-		margin: 0;	
+		margin: 0;
 		overflow: hidden;
 		background: black;
 		color: #ddd;
@@ -126,6 +126,9 @@ background: orange;
 		// TODO
 		// dynamic windows (resizing / arrangement / textwrap options)
 		// add templates-hint, gutter errors, lint
+		// https://codemirror.net/demo/matchhighlighter.html
+		// http://enjalot.github.io/Inlet/
+
 		var codemirror;
 		var delay, status_pane;
 
@@ -176,10 +179,10 @@ background: orange;
 				}, 300 );
 			});
 
-			window.addEventListener('keydown', function(e) {
-				// console.log(e);
-				if (e.which === 13 && e.metaKey) compileAndRun();
-			});
+			// window.addEventListener('keydown', function(e) {
+			// 	console.log(e);
+			// 	if (e.which === 13 && e.metaKey) compileAndRun();
+			// });
 
 			// populate dropdown
 			templates.innerHTML  = '<option value="">--Load--</option>\
@@ -250,8 +253,24 @@ background: orange;
 					'Alt-.': function(cm) { server.jumpToDef(cm); },
 					'Alt-,': function(cm) { server.jumpBack(cm); },
 					'Ctrl-Q': function(cm) { server.rename(cm); },
-					'Ctrl-.': function(cm) { server.selectName(cm); }
+					'Ctrl-.': function(cm) { server.selectName(cm); },
+					'Alt-Down': function() {
+						// cursor movement
+					},
+					'Cmd-Down': function() {
+						console.log('down')
+					},
+					'Cmd-S': function() {
+						// Intercept browser Cmd S
+						compileAndRun();
+					},
+					'Cmd-Enter': function() {
+						console.log('Compile and run.');
+						compileAndRun();
+					}
 				})
+
+				// prompt on leaving.
 				codemirror.on('cursorActivity', function(cm) {
 					server.updateArgHints(cm);
 				});
@@ -259,6 +278,7 @@ background: orange;
 				codemirror.on('keypress', function(cm, kb) {
 					var typed = String.fromCharCode(kb.which || kb.keyCode);
 					if (/[\w\.]/.exec(typed)) {
+
 						server.complete(cm);
 					}
 				})
@@ -343,7 +363,7 @@ background: orange;
 		}
 
 		function test() {
-			
+
 		}
 
 		function destoryAndCreatePreview() {
@@ -389,7 +409,7 @@ background: orange;
 	</header>
 	<container>
 		<editor>
-			
+
 		</editor>
 
 		<preview>

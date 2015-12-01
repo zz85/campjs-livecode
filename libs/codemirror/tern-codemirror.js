@@ -126,6 +126,7 @@
       var request = buildRequest(this, doc, query, pos);
       var extraOptions = request.query && this.options.queryOptions && this.options.queryOptions[request.query.type]
       if (extraOptions) for (var prop in extraOptions) request.query[prop] = extraOptions[prop];
+      console.log('request', request, this.options.queryOptions);
 
       this.server.request(request, function (error, data) {
         if (!error && self.options.responseFilter)
@@ -213,26 +214,38 @@
         after = "\"]";
 
       var typing = cm.getRange(from, to).toLowerCase();
-      // data.completions = data.completions.filter(function(completion) {
-      //   return completion.name.toLowerCase().startsWith(typing);
-      // });
 
       for (var i = 0; i < data.completions.length; ++i) {
-        var completion = data.completions[i], className = typeToIcon(completion.type); 
+        var completion = data.completions[i], className = typeToIcon(completion.type);
         // if (!completion.name.toLowerCase().startsWith(typing)) continue;
-        // if (completion.name.toLowerCase().indexOf(typing) < 0) continue;
+
+        var match = completion.name.toLowerCase().indexOf(typing);
+
+        var score;
+        if (match < 0) continue;
+        else if (match === 0) score = 1 + typing.length / completion.name.length;
+        else score = 1 - match / completion.name.length
 
         // perfect match
         // left match
         // inside match
         // fuzzy match.
 
+        // freq used
+        // search api2
+
         if (data.guess) className += " " + cls + "guess";
         completions.push({text: completion.name + after,
                           displayText: completion.name,
                           className: className,
-                          data: completion});
+                          data: completion,
+                          score: score
+                        });
       }
+
+      completions.sort(function(a, b) {
+        return b.score - a.score;
+      })
 
       var obj = {from: from, to: to, list: completions};
       var tooltip = null;
